@@ -19,6 +19,13 @@ import asyncio
 import sys
 from pathlib import Path
 
+# Windows terminals may default to cp1252, while the lab prints Vietnamese text.
+# Keep the documented ``python src/main.py`` command working without requiring
+# callers to remember ``-X utf8``.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 # Cho phép chạy ``python src/main.py`` từ gốc repo
 _SRC_DIR = Path(__file__).resolve().parent
 if str(_SRC_DIR) not in sys.path:
